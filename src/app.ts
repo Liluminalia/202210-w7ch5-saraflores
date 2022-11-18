@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import { CustomError } from './interfaces/error';
 
 export const app = express();
 app.use(cors());
