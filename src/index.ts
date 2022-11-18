@@ -3,7 +3,7 @@ import { app } from './app.js';
 import debugCreator from 'debug';
 const debug = debugCreator('http');
 import { CustomError } from './interfaces/error.js';
-import { dbConnect } from './db.conect.js';
+import { dataBaseConnect } from './data.base.connect.js';
 const port = process.env.PORT || 3300;
 const server = http.createServer(app);
 server.on('listening', () => {
@@ -27,6 +27,6 @@ server.on('error', (error: CustomError, response: http.ServerResponse) => {
     response.write(error.message);
     response.end();
 });
-dbConnect()
+dataBaseConnect()
     .then(() => server.listen(port))
     .catch((error) => server.emit(error));
