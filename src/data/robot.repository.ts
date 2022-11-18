@@ -10,10 +10,9 @@ export class RobotRepository implements DataRobot<Robot> {
             unique: true,
         },
         img: String,
-        velocity: String,
-        force: String,
+        velocity: Number,
+        force: Number,
         creation: String,
-        isExtra: Boolean,
     });
     #Model = model('Robot', this.#schema, 'robots');
 

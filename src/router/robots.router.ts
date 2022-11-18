@@ -1,7 +1,8 @@
 import { Router } from 'express';
+import { RobotRepository } from '../data/robot.repository.js';
 
 export const robotRouter = Router();
-const controller = new RobotController(new RobotMongoData());
+const controller = new RobotController(new RobotRepository());
 robotRouter.get('/', controller.getAll.bind(controller));
 robotRouter.get('/:id', controller.get.bind(controller));
 robotRouter.post('/', controller.post.bind(controller));
