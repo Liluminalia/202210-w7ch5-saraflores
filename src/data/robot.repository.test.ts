@@ -27,7 +27,7 @@ describe('Given RobotRepository', () => {
             await dataBaseConnect();
             await repository.getModel().deleteMany();
             await repository.getModel().insertMany(mockData);
-            const data = (await repository.getModel().find()) as Array<Robot>;
+            const data = await repository.getModel().find();
             testIds = [data[0].id, data[1].id];
         });
         test('Then getAll should have been called', async () => {
