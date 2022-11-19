@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { RobotController } from '../controller/robot.controller.js';
 import { RobotRepository } from '../data/robot.repository.js';
 
 export const robotRouter = Router();
