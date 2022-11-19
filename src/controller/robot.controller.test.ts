@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { dataBaseConnect } from '../data.base.connect.js';
 import { RobotRepository } from '../data/robot.repository.js';
 import { ProtoRobot } from '../entities/robot.js';
 import { CustomError, HTTPError } from '../interfaces/error.js';
