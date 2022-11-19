@@ -24,7 +24,7 @@ export class RobotRepository implements DataRobot<Robot> {
         return this.#Model.find();
     }
     async get(id: id): Promise<Robot> {
-        const result = await this.#Model.findById(id); //as Robot;
+        const result = (await this.#Model.findById(id)) as Robot;
         if (!result) throw new Error('Not found id');
         return result as unknown as Promise<Robot>;
     }
@@ -34,15 +34,15 @@ export class RobotRepository implements DataRobot<Robot> {
         return result as Robot;
     }
     async patch(id: id, data: Partial<Robot>): Promise<Robot> {
-        const result = await this.#Model.findByIdAndUpdate(id, data, {
+        const result = (await this.#Model.findByIdAndUpdate(id, data, {
             new: true,
-        });
+        })) as Robot;
         if (!result) throw new Error('Not found id');
         return result as unknown as Promise<Robot>;
     }
 
     async delete(id: id): Promise<{ id: id }> {
-        const result = await this.#Model.findByIdAndDelete(id);
+        const result = (await this.#Model.findByIdAndDelete(id)) as Robot;
         if (!result) throw new Error('Not found id');
         return { id: id } as unknown as Promise<Robot>;
     }
