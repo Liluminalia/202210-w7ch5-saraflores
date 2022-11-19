@@ -26,7 +26,7 @@ export class RobotRepository implements DataRobot<Robot> {
     async get(id: id): Promise<Robot> {
         const result = await this.#Model.findById(id); //as Robot;
         if (!result) throw new Error('Not found id');
-        return result as Robot;
+        return result as unknown as Promise<Robot>;
     }
 
     async post(data: ProtoRobot): Promise<Robot> {
@@ -38,13 +38,13 @@ export class RobotRepository implements DataRobot<Robot> {
             new: true,
         });
         if (!result) throw new Error('Not found id');
-        return result as Robot;
+        return result as unknown as Promise<Robot>;
     }
 
     async delete(id: id): Promise<{ id: id }> {
         const result = await this.#Model.findByIdAndDelete(id);
         if (!result) throw new Error('Not found id');
-        return { id: id };
+        return { id: id } as unknown as Promise<Robot>;
     }
 
     disconnect() {

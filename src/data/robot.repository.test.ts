@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import { dataBaseConnect } from '../data.base.connect.js';
-import { ProtoRobot, Robot } from '../entities/robot.js';
 import { RobotRepository } from './robot.repository.js';
 
 const mockData = [

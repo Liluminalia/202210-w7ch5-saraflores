@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { RobotRepository } from '../data/robot.repository.js';
-import { ProtoRobot, Robot } from '../entities/robot.js';
+import { ProtoRobot } from '../entities/robot.js';
 import { CustomError, HTTPError } from '../interfaces/error.js';
 import { RobotController } from './robot.controller.js';
 jest.mock('../data/robot.repository');
