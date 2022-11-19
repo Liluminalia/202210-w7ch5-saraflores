@@ -68,7 +68,6 @@ describe('Given RobotController', () => {
             await robotController.patch(req as Request, res as Response, next);
             expect(res.json).toHaveBeenCalledWith({ robots: mockData[0] });
         });
-
         test('Then delete should have been called', async () => {
             await robotController.delete(req as Request, res as Response, next);
             expect(res.json).toHaveBeenCalledWith({ robots: mockData });
@@ -115,6 +114,35 @@ describe('Given RobotController', () => {
             await robotController.patch(req as Request, res as Response, next);
             expect(error).toBeInstanceOf(Error);
             expect(error).toBeInstanceOf(HTTPError);
+        });
+        // test skipeado xq no tiene ningun sentidolo que he puesto, no se como entrar al error del patch desde aqui
+        test.skip('Then if get wrong id patch should throw a not found id error', async () => {
+            const mockData = [
+                {
+                    name: 'froilan',
+                    img: 'url',
+                    velocity: 5,
+                    force: 2,
+                    creation: 'date',
+                },
+                {
+                    name: 'amancio ortega',
+                    img: 'url',
+                    velocity: 2,
+                    force: 6,
+                    creation: 'date',
+                },
+            ];
+            RobotRepository.prototype.patch = jest
+                .fn()
+                .mockResolvedValue(mockData[5]);
+            const repository = new RobotRepository();
+            const robotController = new RobotController(repository);
+            const req: Partial<Request> = {};
+            const res: Partial<Response> = {
+                json: jest.fn(),
+            };
+            await robotController.patch(req as Request, res as Response, next);
         });
         test('Then if something went wrong delete should throw an error', async () => {
             await robotController.delete(req as Request, res as Response, next);
