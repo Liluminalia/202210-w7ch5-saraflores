@@ -50,14 +50,17 @@ export class RobotRepository implements DataRobot<Robot> {
     async delete(id: id): Promise<void> {
         const result = await this.#Model.findByIdAndDelete(id);
         if (result === null) throw new Error('Not found id');
+        this.getDisconnected();
         return;
     }
 
     #disconnect() {
         mongoose.disconnect();
-        console.log(mongoose.connection.readyState);
     }
     getModel() {
         return this.#Model;
+    }
+    getDisconnected() {
+        return this.#disconnect;
     }
 }

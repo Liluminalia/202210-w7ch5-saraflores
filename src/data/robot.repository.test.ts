@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { dataBaseConnect } from '../data.base.connect.js';
+import { ProtoRobot, Robot } from '../entities/robot.js';
 import { RobotRepository } from './robot.repository.js';
 
 const mockData = [
@@ -23,7 +24,7 @@ describe('Given RobotRepository', () => {
         const repository = new RobotRepository();
         let testIds: Array<string>;
 
-        beforeEach(async () => {
+        beforeAll(async () => {
             await dataBaseConnect();
             await repository.getModel().deleteMany();
             await repository.getModel().insertMany(mockData);
@@ -41,6 +42,9 @@ describe('Given RobotRepository', () => {
         test('Then get should have been called', async () => {
             const result = await repository.get(testIds[0]);
             expect(result.name).toEqual('froilan');
+            expect(async () => {
+                await repository.get(2);
+            }).rejects.toThrowError(mongoose.Error.CastError);
         });
         test('Then post should have been called', async () => {
             const newRobot = {
@@ -51,20 +55,38 @@ describe('Given RobotRepository', () => {
                 creation: 'date',
             };
             const result = await repository.post(newRobot);
-            expect(result.name).toEqual(newRobot.name);
+            const newRobot2 = {
+                name: 'jeff bezzos',
+                img: 'url',
+                velocity: 4,
+                force: 3,
+                creation: 'date',
+                id: result.id,
+            };
+            expect(result.id).toEqual(newRobot2.id);
         });
         test('Then patch should have been called', async () => {
-            const result = await repository.patch(testIds[1], mockData[0]);
-            expect(result).toEqual(mockData[0]);
+            const updatedRobot = {
+                velocity: 9,
+            };
+            const result = await repository.patch(testIds[0], updatedRobot);
+            expect(result.velocity).toEqual(9);
         });
         test('Then delete should have been called', async () => {
             const result = await repository.delete(testIds[0]);
-            expect(result).toEqual([]);
+            expect(result).toBeUndefined();
         });
         test('Then if id is bad formated delete should throw an error', async () => {
             expect(async () => {
                 await repository.delete(2);
             }).rejects.toThrowError(mongoose.Error.CastError);
+        });
+        test('Then getDisconnected should have been called', async () => {
+            RobotRepository.prototype.getDisconnected = jest
+                .fn()
+                .mockResolvedValue();
+            const result = await repository.getDisconnected();
+            expect(result).toBe(mongoose.disconnect());
         });
     });
 });
