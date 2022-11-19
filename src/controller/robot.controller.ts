@@ -22,16 +22,16 @@ export class RobotController {
     }
     async get(req: Request, resp: Response, next: NextFunction) {
         try {
-            const robot = await this.repository.get(req.params.id);
-            resp.json({ robot });
+            const robots = await this.repository.get(req.params.id);
+            resp.json({ robots });
         } catch (error) {
             next(this.#createHttpError(error as Error));
         }
     }
     async post(req: Request, resp: Response, next: NextFunction) {
         try {
-            const robot = await this.repository.post(req.body);
-            resp.json({ robot });
+            const robots = await this.repository.post(req.body);
+            resp.json({ robots });
         } catch (error) {
             const httpError = new HTTPError(
                 503,
@@ -43,8 +43,8 @@ export class RobotController {
     }
     async patch(req: Request, resp: Response, next: NextFunction) {
         try {
-            const robot = await this.repository.patch(req.params.id, req.body);
-            resp.json({ robot });
+            const robots = await this.repository.patch(req.params.id, req.body);
+            resp.json({ robots });
         } catch (error) {
             next(this.#createHttpError(error as Error));
         }
