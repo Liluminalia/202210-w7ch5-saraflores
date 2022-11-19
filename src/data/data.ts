@@ -4,7 +4,7 @@ export interface Data<T> {
     get: (id: id) => Promise<T> | undefined;
     post: (data: Partial<T>) => Promise<T>;
     patch: (id: id, data: Partial<T>) => Promise<T>;
-    delete: (id: id) => Promise<void>;
+    delete: (id: id) => Promise<{ id: id }>;
 }
 export interface DataRobot<Robot> {
     post: (data: Partial<Robot>) => Promise<Robot>;
