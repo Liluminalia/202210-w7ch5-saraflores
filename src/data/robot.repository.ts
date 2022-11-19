@@ -17,13 +17,7 @@ export class RobotRepository implements DataRobot<Robot> {
     #Model = model('Robot', this.#schema, 'robots');
 
     constructor() {
-        this.#schema.set('toJSON', {
-            transform: (_document, returnedObject) => {
-                returnedObject.id = returnedObject._id;
-                delete returnedObject.__v;
-                delete returnedObject._id;
-            },
-        });
+        //
     }
 
     async getAll(): Promise<Array<Robot>> {
