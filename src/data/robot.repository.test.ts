@@ -1,8 +1,5 @@
-import mongoose from 'mongoose';
 import { dataBaseConnect } from '../data.base.connect.js';
-import { Robot } from '../entities/robot.js';
 import { RobotRepository } from './robot.repository.js';
-
 const mockData = [
     {
         name: 'froilan',
@@ -40,8 +37,8 @@ describe('Given RobotRepository', () => {
         });
         test('Then if id is bad formated get should throw an error', async () => {
             expect(async () => {
-                await repository.get(8);
-            }).rejects.toThrowError(mongoose.Error.CastError);
+                await repository.get(testIds[3]);
+            }).rejects.toThrow();
         });
         test('Then post should have been called', async () => {
             const newRobot = {
@@ -71,8 +68,8 @@ describe('Given RobotRepository', () => {
         });
         test('Then if id is bad formated patch should throw an error', async () => {
             expect(async () => {
-                await repository.patch(2, mockData[0]);
-            }).rejects.toThrowError(mongoose.Error.CastError);
+                await repository.patch(testIds[3], mockData[0]);
+            }).rejects.toThrowError();
         });
         test('Then delete should have been called', async () => {
             const result = await repository.delete(testIds[0]);
@@ -80,8 +77,8 @@ describe('Given RobotRepository', () => {
         });
         test('Then if id is bad formated delete should throw an error', async () => {
             expect(async () => {
-                await repository.delete(34534535);
-            }).rejects.toThrowError(mongoose.Error.CastError);
+                await repository.delete(testIds[3]);
+            }).rejects.toThrowError();
         });
         afterAll(() => {
             repository.disconnect();
