@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { CustomError } from './interfaces/error';
+import { CustomError } from './interfaces/error.js';
+import { robotRouter } from './router/robots.router.js';
 
 export const app = express();
 app.use(cors());
@@ -21,7 +22,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     res.send('API de Robots, pon /robots al final de la URL').end();
 });
-
+app.use('/robots', robotRouter);
 app.use(
     (error: CustomError, _req: Request, resp: Response, next: NextFunction) => {
         console.log(
