@@ -115,10 +115,10 @@ describe('Given RobotController', () => {
             await robotController.delete(req as Request, res as Response, next);
             expect(error).toBeInstanceOf(HTTPError);
         });
-            test('if createHttpError() It should throw the correct message', async () => {
-                error.message = 'Not found id';
-                await robotController.createHttpError(error);
-                expect(error.message).toBe('Not found id');
-            });
+        test('if createHttpError() It should throw the correct message', async () => {
+            error.message = 'Not found id';
+            await robotController.createHttpError(error);
+            expect(error.message).toBe('Not found id');
+        });
     });
 });
