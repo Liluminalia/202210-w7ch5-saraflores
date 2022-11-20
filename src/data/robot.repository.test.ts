@@ -1,4 +1,5 @@
 import { dataBaseConnect } from '../data.base.connect.js';
+import { Robot } from '../entities/robot.js';
 import { RobotRepository } from './robot.repository.js';
 const mockData = [
     {
@@ -24,7 +25,7 @@ describe('Given RobotRepository', () => {
             await dataBaseConnect();
             await repository.getModel().deleteMany();
             await repository.getModel().insertMany(mockData);
-            const data = await repository.getModel().find();
+            const data: Array<Robot> = await repository.getModel().find();
             testIds = [data[0].id, data[1].id];
         });
         test('Then getAll should have been called', async () => {
