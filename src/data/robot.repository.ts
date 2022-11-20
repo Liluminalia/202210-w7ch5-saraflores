@@ -15,7 +15,6 @@ export class RobotRepository implements DataRobot<Robot> {
         creation: String,
     });
     #Model = model('Robot', this.#schema, 'robots');
-
     constructor() {
         //
     }
@@ -28,7 +27,6 @@ export class RobotRepository implements DataRobot<Robot> {
         if (!result) throw new Error('Not found id');
         return result as unknown as Promise<Robot>;
     }
-
     async post(data: ProtoRobot): Promise<Robot> {
         const result = await this.#Model.create(data);
         return result as Robot;
@@ -40,13 +38,11 @@ export class RobotRepository implements DataRobot<Robot> {
         if (!result) throw new Error('Not found id');
         return result as unknown as Promise<Robot>;
     }
-
     async delete(id: id): Promise<{ id: id }> {
         const result = (await this.#Model.findByIdAndDelete(id)) as Robot;
         if (!result) throw new Error('Not found id');
         return { id: id } as unknown as Promise<Robot>;
     }
-
     disconnect() {
         mongoose.disconnect();
     }

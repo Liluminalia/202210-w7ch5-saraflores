@@ -77,7 +77,7 @@ describe('Given RobotRepository', () => {
         });
         test('Then if id is bad formated delete should throw an error', async () => {
             expect(async () => {
-                await repository.delete(testIds[3]);
+                await repository.delete(234);
             }).rejects.toThrowError();
         });
         afterAll(() => {
