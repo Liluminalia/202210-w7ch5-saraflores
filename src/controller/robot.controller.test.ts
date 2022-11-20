@@ -97,57 +97,28 @@ describe('Given RobotController', () => {
         const next: NextFunction = jest.fn();
         test('Then if something went wrong getAll should throw an error', async () => {
             await robotController.getAll(req as Request, res as Response, next);
-            expect(error).toBeInstanceOf(Error);
             expect(error).toBeInstanceOf(HTTPError);
         });
         test('Then if something went wrong get should throw an error', async () => {
             await robotController.get(req as Request, res as Response, next);
-            expect(error).toBeInstanceOf(Error);
             expect(error).toBeInstanceOf(HTTPError);
         });
         test('Then if something went wrong post should throw an error', async () => {
             await robotController.post(req as Request, res as Response, next);
-            expect(error).toBeInstanceOf(Error);
             expect(error).toBeInstanceOf(HTTPError);
         });
         test('Then if something went wrong patch should throw an error', async () => {
             await robotController.patch(req as Request, res as Response, next);
-            expect(error).toBeInstanceOf(Error);
             expect(error).toBeInstanceOf(HTTPError);
-        });
-        // test skipeado xq no tiene ningun sentidolo que he puesto, no se como entrar al error del patch desde aqui
-        test.skip('Then if get wrong id patch should throw a not found id error', async () => {
-            const mockData = [
-                {
-                    name: 'froilan',
-                    img: 'url',
-                    velocity: 5,
-                    force: 2,
-                    creation: 'date',
-                },
-                {
-                    name: 'amancio ortega',
-                    img: 'url',
-                    velocity: 2,
-                    force: 6,
-                    creation: 'date',
-                },
-            ];
-            RobotRepository.prototype.patch = jest
-                .fn()
-                .mockResolvedValue(mockData[5]);
-            const repository = new RobotRepository();
-            const robotController = new RobotController(repository);
-            const req: Partial<Request> = {};
-            const res: Partial<Response> = {
-                json: jest.fn(),
-            };
-            await robotController.patch(req as Request, res as Response, next);
         });
         test('Then if something went wrong delete should throw an error', async () => {
             await robotController.delete(req as Request, res as Response, next);
-            expect(error).toBeInstanceOf(Error);
             expect(error).toBeInstanceOf(HTTPError);
         });
+            test('if createHttpError() It should throw the correct message', async () => {
+                error.message = 'Not found id';
+                await robotController.createHttpError(error);
+                expect(error.message).toBe('Not found id');
+            });
     });
 });

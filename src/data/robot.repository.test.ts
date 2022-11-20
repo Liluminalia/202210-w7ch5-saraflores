@@ -20,7 +20,7 @@ describe('Given RobotRepository', () => {
     describe('When we instantiate it', () => {
         const repository = new RobotRepository();
         let testIds: Array<string>;
-        beforeAll(async () => {
+        beforeEach(async () => {
             await dataBaseConnect();
             await repository.getModel().deleteMany();
             await repository.getModel().insertMany(mockData);
@@ -35,7 +35,7 @@ describe('Given RobotRepository', () => {
             const result = await repository.get(testIds[0]);
             expect(result.name).toEqual('froilan');
         });
-        test('Then if id is bad formated get should throw an error', async () => {
+        test('Then if id is bad formate get should throw an error', async () => {
             expect(async () => {
                 await repository.get(testIds[3]);
             }).rejects.toThrow();
@@ -66,7 +66,7 @@ describe('Given RobotRepository', () => {
             const result = await repository.patch(testIds[0], updatedRobot);
             expect(result.velocity).toEqual(9);
         });
-        test('Then if id is bad formated patch should throw an error', async () => {
+        test('Then if id is bad formate patch should throw an error', async () => {
             expect(async () => {
                 await repository.patch(testIds[3], mockData[0]);
             }).rejects.toThrowError();
@@ -75,9 +75,9 @@ describe('Given RobotRepository', () => {
             const result = await repository.delete(testIds[0]);
             expect(result).toEqual({ id: testIds[0] });
         });
-        test('Then if id is bad formated delete should throw an error', async () => {
+        test('Then if id is bad formate delete should throw an error', async () => {
             expect(async () => {
-                await repository.delete(testIds[3]);
+                await repository.delete(234);
             }).rejects.toThrowError();
         });
         afterAll(() => {
