@@ -49,52 +49,43 @@ describe('Given UserController', () => {
             expect(result).toBe(true);
         });
     });
-    // describe('when we dont instantiate it', () => {
-    //     const error: CustomError = new HTTPError(
-    //         404,
-    //         'Not found id',
-    //         'message of error'
-    //     );
-    //     UserRepository.prototype.getAll = jest
-    //         .fn()
-    //         .mockRejectedValue(['User']);
-    //     UserRepository.prototype.get = jest.fn().mockRejectedValue('User');
-    //     UserRepository.prototype.post = jest.fn().mockRejectedValue(['User']);
-    //     UserRepository.prototype.patch = jest
-    //         .fn()
-    //         .mockRejectedValue(['User']);
-    //     UserRepository.prototype.delete = jest.fn().mockRejectedValue(3);
-    //     const repository = new UserRepository();
-    //     const userController = new UserController(repository);
-    //     const req: Partial<Request> = {};
-    //     const res: Partial<Response> = {
-    //         json: jest.fn(),
-    //     };
-    //     const next: NextFunction = jest.fn();
-    //     test('Then if something went wrong getAll should throw an error', async () => {
-    //         await userController.getAll(req as Request, res as Response, next);
-    //         expect(error).toBeInstanceOf(HTTPError);
-    //     });
-    //     test('Then if something went wrong get should throw an error', async () => {
-    //         await userController.get(req as Request, res as Response, next);
-    //         expect(error).toBeInstanceOf(HTTPError);
-    //     });
-    //     test('Then if something went wrong post should throw an error', async () => {
-    //         await userController.post(req as Request, res as Response, next);
-    //         expect(error).toBeInstanceOf(HTTPError);
-    //     });
-    //     test('Then if something went wrong patch should throw an error', async () => {
-    //         await userController.patch(req as Request, res as Response, next);
-    //         expect(error).toBeInstanceOf(HTTPError);
-    //     });
-    //     test('Then if something went wrong delete should throw an error', async () => {
-    //         await userController.delete(req as Request, res as Response, next);
-    //         expect(error).toBeInstanceOf(HTTPError);
-    //     });
-    //     test('if createHttpError() It should throw the correct message', async () => {
-    //         error.message = 'Not found id';
-    //         await userController.createHttpError(error);
-    //         expect(error.message).toBe('Not found id');
-    //     });
-    // });
+    describe('when we dont instantiate it', () => {
+        const error: CustomError = new HTTPError(
+            404,
+            'Not found id',
+            'message of error'
+        );
+
+        UserRepository.prototype.get = jest.fn().mockRejectedValue('User');
+        UserRepository.prototype.post = jest.fn().mockRejectedValue(['User']);
+        const repository = new UserRepository();
+        const userController = new UserController(repository);
+        const req: Partial<Request> = {};
+        const res: Partial<Response> = {
+            json: jest.fn(),
+        };
+        const next: NextFunction = jest.fn();
+
+        test('Then if something went wrong register should throw an error', async () => {
+            await userController.register(
+                req as Request,
+                res as Response,
+                next
+            );
+            expect(error).toBeInstanceOf(HTTPError);
+        });
+        //     test('Then if something went wrong patch should throw an error', async () => {
+        //         await userController.patch(req as Request, res as Response, next);
+        //         expect(error).toBeInstanceOf(HTTPError);
+        //     });
+        //     test('Then if something went wrong delete should throw an error', async () => {
+        //         await userController.delete(req as Request, res as Response, next);
+        //         expect(error).toBeInstanceOf(HTTPError);
+        //     });
+        test('if createHttpError() It should throw the correct message', async () => {
+            error.message = 'Not found id';
+            await userController.createHttpError(error);
+            expect(error.message).toBe('Not found id');
+        });
+    });
 });
