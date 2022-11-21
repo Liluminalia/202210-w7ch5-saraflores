@@ -75,10 +75,20 @@ describe('Given RobotRepository', () => {
             const result = await repository.delete(testIds[0]);
             expect(result).toEqual({ id: testIds[0] });
         });
+        test('Then if id is not an id delete should throw an error', async () => {
+            expect(async () => {
+                await repository.delete(23);
+            }).rejects.toThrow();
+        });
         test('Then if id is bad formate delete should throw an error', async () => {
             expect(async () => {
-                await repository.delete(234);
-            }).rejects.toThrowError();
+                await repository.delete('6378d483b738f8e5d87e8285');
+            }).rejects.toThrow();
+        });
+        test('Then if id is bad formate delete should throw an error', async () => {
+            expect(async () => {
+                await repository.delete(testIds[0]);
+            }).rejects.toThrow();
         });
         afterAll(() => {
             repository.disconnect();
