@@ -40,7 +40,7 @@ export class RobotRepository implements DataRobot<Robot> {
     }
     async delete(id: id): Promise<{ id: id }> {
         const result = (await this.#Model.findByIdAndDelete(id)) as Robot;
-        if (!result) throw new Error('Not found id');
+        if (result === null) throw new Error('Not found id');
         return { id: id } as unknown as Promise<Robot>;
     }
     disconnect() {
