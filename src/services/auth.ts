@@ -1,7 +1,6 @@
 import { SECRET } from '../config.js';
 import jwt from 'jsonwebtoken';
-import pkg from 'bcryptjs';
-const { hash, compare } = pkg;
+import bc from 'bcryptjs';
 
 export const createToken = (payload: { userName: string }) => {
     if (typeof SECRET !== 'string') throw new Error();
@@ -15,11 +14,11 @@ export const readToken = (token: string) => {
     return payload;
 };
 export const passwordEncrypt = (password: string) => {
-    return hash(password, 10);
+    return bc.hash(password, 10);
 };
 export const passwordComparer = (
-    password: string,
+    newPassword: string,
     encryptedPassword: string
 ) => {
-    return compare(password, encryptedPassword);
+    return bc.compare(newPassword, encryptedPassword);
 };
