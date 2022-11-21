@@ -1,8 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { HTTPError } from '../interfaces/error.js';
 import { readToken } from '../services/auth.js';
+import { JwtPayload } from 'jsonwebtoken';
+interface ExtraRequest extends Request {
+    payload?: JwtPayload;
+}
 
-export const logged = (req: Request, res: Response, next: NextFunction) => {
+export const logged = (
+    req: ExtraRequest,
+    res: Response,
+    next: NextFunction
+) => {
     const authString = req.get('Authorization');
     if (!authString || authString?.slice(1, 6) !== 'Bearer') {
         next(
