@@ -35,10 +35,10 @@ export class UserController {
             const token = createToken({ userName: user.name });
             res.json({ token });
         } catch (error) {
-            next(this.#createHttpError(error as Error));
+            next(this.createHttpError(error as Error));
         }
     }
-    #createHttpError(error: Error) {
+    createHttpError(error: Error) {
         if ((error as Error).message === 'Not found id') {
             const httpError = new HTTPError(
                 404,

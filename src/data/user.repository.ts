@@ -21,4 +21,7 @@ export class UserRepository implements BasicRepo<User> {
         if (!result) throw new Error('not found id');
         return result as unknown as User;
     }
+    getUserModel() {
+        return this.#Model;
+    }
 }
