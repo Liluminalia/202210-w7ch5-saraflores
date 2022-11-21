@@ -1,6 +1,6 @@
-import mongoose, { model } from 'mongoose';
+import { model } from 'mongoose';
 import { User, userSchema } from '../entities/user.js';
-import { passwordComparer, passwordEncrypt } from '../services/auth.js';
+import { passwordEncrypt } from '../services/auth.js';
 import { BasicRepo, id } from './repo.js';
 
 export class UserRepository implements BasicRepo<User> {

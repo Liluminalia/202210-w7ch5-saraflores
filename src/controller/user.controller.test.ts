@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { isErrored } from 'stream';
 import { UserRepository } from '../data/user.repository.js';
 import { CustomError, HTTPError } from '../interfaces/error.js';
 import { passwordComparer } from '../services/auth.js';
