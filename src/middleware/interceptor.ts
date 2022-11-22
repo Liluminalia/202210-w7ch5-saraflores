@@ -13,7 +13,8 @@ export const logged = (
     next: NextFunction
 ) => {
     const authString = req.get('Authorization');
-    if (!authString || authString?.startsWith('Bearer')) {
+
+    if (!authString || !authString?.startsWith('Bearer')) {
         next(
             new HTTPError(403, 'Forbidden', 'usuario o contraseña incorrecto')
         );

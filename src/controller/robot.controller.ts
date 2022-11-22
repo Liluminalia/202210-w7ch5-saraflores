@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Data } from '../data/data.js';
+import { Repo } from '../data/repo.js';
 import { BasicRepo } from '../data/repo.js';
 import { Robot } from '../entities/robot.js';
 import { User } from '../entities/user.js';
@@ -8,7 +8,7 @@ import { ExtraRequest } from '../middleware/interceptor.js';
 
 export class RobotController {
     constructor(
-        public readonly repository: Data<Robot>,
+        public readonly repository: Repo<Robot>,
         public readonly userRepository: BasicRepo<User>
     ) {
         //
