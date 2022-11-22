@@ -29,6 +29,7 @@ export class UserController {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
             const user = await this.repository.find({ name: req.body.name });
+            user.id;
             const isPasswordValid = await passwordComparer(
                 req.body.password,
                 user.password

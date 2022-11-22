@@ -13,19 +13,20 @@ export const logged = (
     next: NextFunction
 ) => {
     const authString = req.get('Authorization');
-    if (!authString || authString?.slice(1, 6) !== 'Bearer') {
+    if (!authString || authString?.startsWith('Bearer')) {
         next(
-            new HTTPError(403, 'forbidden', 'usuario o contraseña incorrecto')
+            new HTTPError(403, 'Forbidden', 'usuario o contraseña incorrecto')
         );
         return;
     }
     try {
         const token = authString.slice(7);
+        readToken(token);
         req.payload = readToken(token);
         next();
     } catch (error) {
         next(
-            new HTTPError(403, 'forbidden', 'usuario o contraseña incorrecto')
+            new HTTPError(403, 'Forbidden', 'usuario o contraseña incorrecto')
         );
     }
 };
@@ -34,16 +35,22 @@ export const Authentication = async (
     res: Response,
     next: NextFunction
 ) => {
-    // req.payload.id; //ID del usuario segun el token
-
-    req.params.id; // ID del robot
     const robotRepo = new RobotRepository();
-    const robot = await robotRepo.get(req.params.id); // id del dueño del robot
+    try {
+        // req.params.id -----> ID del robot
+        const robot = await robotRepo.get(req.params.id); // id del dueño del robot
 
-    if (robot.owner?.toString() === (req.payload.id as JwtPayload).id) {
-        next(
-            new HTTPError(403, 'forbbiden', 'usuario o contraseña incorrectos')
-        );
+        if (robot.owner.toString() !== (req.payload as JwtPayload).id) {
+            next(
+                new HTTPError(
+                    403,
+                    'Forbidden',
+                    'usuario o contraseña incorrectos'
+                )
+            );
+        }
+        next();
+    } catch (error) {
+        next(error);
     }
-    next();
 };

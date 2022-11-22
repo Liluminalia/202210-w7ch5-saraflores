@@ -7,7 +7,6 @@ import { setCors } from './middleware/cors.js';
 import { userRouter } from './router/user.router.js';
 
 export const app = express();
-app.use(cors());
 app.disable('x-powered-by');
 const corsOptions = {
     origin: '*',

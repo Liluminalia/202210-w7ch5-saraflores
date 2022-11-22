@@ -1,9 +1,10 @@
 import http from 'http';
 import { app } from './app.js';
 import debugCreator from 'debug';
-const debug = debugCreator('http');
 import { CustomError } from './interfaces/error.js';
 import { dataBaseConnect } from './data.base.connect.js';
+
+const debug = debugCreator('http');
 const port = process.env.PORT || 3300;
 const server = http.createServer(app);
 server.on('listening', () => {
@@ -28,5 +29,8 @@ server.on('error', (error: CustomError, response: http.ServerResponse) => {
     response.end();
 });
 dataBaseConnect()
-    .then(() => server.listen(port))
+    .then((mongoose) => {
+        debug('DB:', mongoose.connection.db.databaseName);
+        server.listen(port);
+    })
     .catch((error) => server.emit(error));
