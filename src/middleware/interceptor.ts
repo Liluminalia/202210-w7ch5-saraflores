@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { HTTPError } from '../interfaces/error.js';
 import { readToken } from '../services/auth.js';
 import { JwtPayload } from 'jsonwebtoken';
-interface ExtraRequest extends Request {
+import { RobotRepository } from '../data/robot.repository.js';
+export interface ExtraRequest extends Request {
     payload?: JwtPayload;
 }
 
@@ -27,4 +28,22 @@ export const logged = (
             new HTTPError(403, 'forbidden', 'usuario o contraseña incorrecto')
         );
     }
+};
+export const Authentication = async (
+    req: ExtraRequest,
+    res: Response,
+    next: NextFunction
+) => {
+    // req.payload.id; //ID del usuario segun el token
+
+    req.params.id; // ID del robot
+    const robotRepo = new RobotRepository();
+    const robot = await robotRepo.get(req.params.id); // id del dueño del robot
+
+    if (robot.owner?.toString() === (req.payload.id as JwtPayload).id) {
+        next(
+            new HTTPError(403, 'forbbiden', 'usuario o contraseña incorrectos')
+        );
+    }
+    next();
 };

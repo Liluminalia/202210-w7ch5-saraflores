@@ -8,5 +8,5 @@ export interface BasicRepo<T> {
 export interface Repo<T> extends BasicRepo<T> {
     getAll: () => Promise<Array<T>>;
     patch: (id: id, data: Partial<T>) => Promise<T>;
-    delete: (id: id) => Promise<void>;
+    delete: (id: id) => Promise<{ id: id }>;
 }

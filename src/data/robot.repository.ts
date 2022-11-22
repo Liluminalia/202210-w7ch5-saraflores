@@ -1,8 +1,9 @@
 import mongoose, { Schema, model } from 'mongoose';
 import { ProtoRobot, Robot } from '../entities/robot.js';
-import { DataRobot, id } from './data.js';
+import { id } from './data.js';
+import { Repo } from './repo.js';
 
-export class RobotRepository implements DataRobot<Robot> {
+export class RobotRepository implements Repo<Robot> {
     #schema = new Schema({
         name: {
             type: String,
@@ -42,6 +43,11 @@ export class RobotRepository implements DataRobot<Robot> {
         const result = (await this.#Model.findByIdAndDelete(id)) as Robot;
         if (result === null) throw new Error('Not found id');
         return { id: id } as unknown as Promise<Robot>;
+    }
+    async find(search: any): Promise<Robot> {
+        const result = await this.#Model.findOne(search);
+        if (!result) throw new Error('not found id');
+        return result as unknown as Robot;
     }
     disconnect() {
         mongoose.disconnect();

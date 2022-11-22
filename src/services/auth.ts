@@ -2,9 +2,14 @@ import { SECRET } from '../config.js';
 import jwt from 'jsonwebtoken';
 import bc from 'bcryptjs';
 
-export const createToken = (payload: { userName: string }) => {
+export const createToken = (payload: TokenPayload) => {
     if (typeof SECRET !== 'string') throw new Error();
     return jwt.sign(payload, SECRET);
+};
+type TokenPayload = {
+    id: string;
+    name: string;
+    role: string;
 };
 
 export const readToken = (token: string) => {

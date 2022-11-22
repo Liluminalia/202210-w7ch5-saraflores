@@ -8,7 +8,7 @@ import {
 import jwt from 'jsonwebtoken';
 import bc from 'bcryptjs';
 
-const mock = { userName: 'pepe' };
+const mock = { userName: 'pepe', role: 'admin' };
 describe('given createToken', () => {
     describe('when...', () => {
         test('then...', () => {
