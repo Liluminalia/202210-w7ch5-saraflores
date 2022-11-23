@@ -6,11 +6,11 @@ import { Authentication, logged } from '../middleware/interceptor.js';
 
 export const robotRouter = Router();
 const controller = new RobotController(
-    new RobotRepository(),
+    RobotRepository.getInstance(),
     new UserRepository()
 );
-robotRouter.get('/', logged, controller.getAll.bind(controller));
-robotRouter.get('/:id', logged, controller.get.bind(controller));
+robotRouter.get('/', controller.getAll.bind(controller));
+robotRouter.get('/:id', controller.get.bind(controller));
 robotRouter.post('/create', logged, controller.post.bind(controller));
 robotRouter.patch(
     '/update/:id',
