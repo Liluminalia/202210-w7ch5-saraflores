@@ -1,4 +1,4 @@
-export type id = number | string; //Types.ObjectId;
+export type id = number | string;
 export interface BasicRepo<T> {
     get: (id: id) => Promise<T>;
     post: (data: Partial<T>) => Promise<T>;
