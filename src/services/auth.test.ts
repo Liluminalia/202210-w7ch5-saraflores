@@ -8,7 +8,7 @@ import {
 import jwt from 'jsonwebtoken';
 import bc from 'bcryptjs';
 
-const mock = { userName: 'pepe' };
+const mock = { id: '', name: 'pepe', role: 'admin' };
 describe('given createToken', () => {
     describe('when...', () => {
         test('then...', () => {
@@ -25,7 +25,7 @@ describe('given readToken', () => {
         debug(tokenMock);
         test('then...', () => {
             const r = readToken(tokenMock);
-            expect(r.userName).toEqual(mock.userName);
+            expect(r.name).toEqual(mock.name);
         });
     });
     describe('when token is not valid', () => {
