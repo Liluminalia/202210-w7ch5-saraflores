@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from 'mongoose';
+import mongoose, { model } from 'mongoose';
 import { ProtoRobot, Robot, robotSchema } from '../entities/robot.js';
 import { id, Repo } from './repo.js';
 
@@ -13,7 +13,7 @@ export class RobotRepository implements Repo<Robot> {
         if (!result) {
             throw new Error('Not found id');
         }
-        return result as Robot;
+        return result;
     }
     async post(data: ProtoRobot): Promise<Robot> {
         data.date = this.#generateDate(data.date as string);

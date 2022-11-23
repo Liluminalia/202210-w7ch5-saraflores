@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Repo } from '../data/repo.js';
-import { BasicRepo } from '../data/repo.js';
+import { Repo, BasicRepo } from '../data/repo.js';
 import { Robot } from '../entities/robot.js';
 import { User } from '../entities/user.js';
 import { HTTPError } from '../interfaces/error.js';
