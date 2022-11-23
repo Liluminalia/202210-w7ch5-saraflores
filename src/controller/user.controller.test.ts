@@ -1,8 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
+import mongoose from 'mongoose';
+import { dataBaseConnect } from '../data.base.connect.js';
 import { RobotRepository } from '../data/robot.repository.js';
 import { UserRepository } from '../data/user.repository.js';
+import { User } from '../entities/user.js';
 import { CustomError, HTTPError } from '../interfaces/error.js';
-import { passwordComparer } from '../services/auth.js';
+import {
+    createToken,
+    passwordComparer,
+    TokenPayload,
+} from '../services/auth.js';
 import { UserController } from './user.controller.js';
 jest.mock('../data/user.repository');
 
@@ -12,16 +19,49 @@ describe('Given UserController', () => {
 
         UserRepository.prototype.post = jest.fn().mockResolvedValue('');
 
-        const repository = new UserRepository();
-        const robotRepo = new RobotRepository();
+        const repository = UserRepository.getInstance();
+        const robotRepo = RobotRepository.getInstance();
         const userController = new UserController(repository, robotRepo);
         const req: Partial<Request> = {};
         const res: Partial<Response> = {
             json: jest.fn(),
         };
         const next: NextFunction = jest.fn();
+        const setCollection = async () => {
+            const usersMock = [
+                { name: 'tomas', email: 'tomatin@gmail.com', role: 'user' },
+                { name: 'pedro', email: 'gone@gmail.com', role: 'admin' },
+                { name: 'vera', email: 'pipipi@gmail.com', role: 'admin' },
+                {
+                    name: 'Pepino',
+                    email: 'siempreesverano@gmail.com',
+                    role: 'user',
+                },
+            ];
 
-        test('Then register should have been called', async () => {
+            await User.deleteMany();
+            await User.insertMany(usersMock);
+            const data = await User.find();
+            const testIds = [data[0].id, data[1].id];
+            return testIds;
+        };
+        let token: string;
+        let ids: Array<string>;
+        beforeEach(async () => {
+            await dataBaseConnect();
+            ids = await setCollection();
+            const payload: TokenPayload = {
+                id: ids[0],
+                name: 'pepebot',
+                role: 'admin',
+            };
+            token = createToken(payload);
+        });
+        afterEach(async () => {
+            await mongoose.disconnect();
+        });
+
+        test.skip('Then register should have been called', async () => {
             req.params = {
                 name: 'pepe',
                 password: 'pepe123',
@@ -33,7 +73,11 @@ describe('Given UserController', () => {
                 res as Response,
                 next
             );
-            expect(res.json).toHaveBeenCalledWith({ user: '' });
+            expect(res.json).toHaveBeenCalledWith({
+                id: ids[0],
+                name: 'pepe',
+                role: 'admin',
+            });
         });
 
         test.skip('Then login should have been called', async () => {
@@ -59,8 +103,8 @@ describe('Given UserController', () => {
 
         UserRepository.prototype.get = jest.fn().mockRejectedValue('User');
         UserRepository.prototype.post = jest.fn().mockRejectedValue(['User']);
-        const repository = new UserRepository();
-        const robotRepo = new RobotRepository();
+        const repository = UserRepository.getInstance();
+        const robotRepo = RobotRepository.getInstance();
         const userController = new UserController(repository, robotRepo);
         const req: Partial<Request> = {};
         const res: Partial<Response> = {
@@ -84,10 +128,5 @@ describe('Given UserController', () => {
         //         await userController.delete(req as Request, res as Response, next);
         //         expect(error).toBeInstanceOf(HTTPError);
         //     });
-        test('if createHttpError() It should throw the correct message', async () => {
-            error.message = 'Not found id';
-            await userController.createHttpError(error);
-            expect(error.message).toBe('Not found id');
-        });
     });
 });

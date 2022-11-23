@@ -36,12 +36,13 @@ export const Authentication = async (
     res: Response,
     next: NextFunction
 ) => {
-    const robotRepo = new RobotRepository();
+    const robotRepo = RobotRepository.getInstance();
+
     try {
         // req.params.id -----> ID del robot
         const robot = await robotRepo.get(req.params.id); // id del dueño del robot
 
-        if (robot.owner.toString() !== (req.payload as JwtPayload).id) {
+        if (req.payload && robot.owner._id.toString() !== req.payload.id) {
             next(
                 new HTTPError(
                     403,

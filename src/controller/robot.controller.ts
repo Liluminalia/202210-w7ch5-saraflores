@@ -1,14 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
+import createDebug from 'debug';
 import { Repo, BasicRepo } from '../data/repo.js';
-import { Robot } from '../entities/robot.js';
-import { User } from '../entities/user.js';
+import { RobotI } from '../entities/robot.js';
+import { UserI } from '../entities/user.js';
 import { HTTPError } from '../interfaces/error.js';
 import { ExtraRequest } from '../middleware/interceptor.js';
 
+const debug = createDebug('W8:controllers:robot');
+
 export class RobotController {
     constructor(
-        public readonly repository: Repo<Robot>,
-        public readonly userRepository: BasicRepo<User>
+        public repository: Repo<RobotI>,
+        public userRepository: BasicRepo<UserI>
     ) {
         //
     }
@@ -27,21 +30,23 @@ export class RobotController {
     }
     async get(req: Request, resp: Response, next: NextFunction) {
         try {
-            const robots = await this.repository.get(req.params.id);
-            resp.json({ robots });
+            const robot = await this.repository.get(req.params.id);
+            resp.json({ robot });
         } catch (error) {
-            next(this.createHttpError(error as Error));
+            next(this.#createHttpError(error as Error));
         }
     }
     async post(req: ExtraRequest, resp: Response, next: NextFunction) {
         try {
+            debug('post');
             if (!req.payload) {
                 throw new Error('invalid payload');
             }
             const user = await this.userRepository.get(req.payload.id);
             req.body.owner = user.id;
-            const robots = await this.repository.post(req.body);
-            resp.json({ robots });
+            const robot = await this.repository.post(req.body);
+            //   añadir robots en la lista, falta por hacer
+            resp.status(201).json({ robot });
         } catch (error) {
             const httpError = new HTTPError(
                 503,
@@ -56,18 +61,18 @@ export class RobotController {
             const robots = await this.repository.patch(req.params.id, req.body);
             resp.json({ robots });
         } catch (error) {
-            next(this.createHttpError(error as Error));
+            next(this.#createHttpError(error as Error));
         }
     }
     async delete(req: Request, resp: Response, next: NextFunction) {
         try {
             await this.repository.delete(req.params.id);
-            resp.json({ id: req.params.id });
+            resp.json({});
         } catch (error) {
-            next(this.createHttpError(error as Error));
+            next(this.#createHttpError(error as Error));
         }
     }
-    createHttpError(error: Error) {
+    #createHttpError(error: Error) {
         if (error.message === 'Not found id') {
             const httpError = new HTTPError(404, 'Not Found', error.message);
             return httpError;

@@ -1,22 +1,22 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { model, Schema, Types } from 'mongoose';
 
-export type ProtoUser = {
+export type ProtoUserI = {
     name?: string;
     email?: string;
     password?: string;
     role?: string;
-    robots?: Array<typeof mongoose.Types.ObjectId>;
+    robots?: Array<Types.ObjectId>;
 };
 
-export type User = {
+export type UserI = {
     id: string;
     name: string;
     email: string;
     password: string;
     role: string;
-    robots?: Array<typeof mongoose.Types.ObjectId>;
+    robots: Array<Types.ObjectId>;
 };
-export const userSchema = new Schema({
+export const userSchema = new Schema<UserI>({
     name: {
         type: String,
         required: true,
@@ -27,8 +27,8 @@ export const userSchema = new Schema({
     role: String,
     robots: [
         {
-            type: mongoose.Types.ObjectId,
-            ref: `robots`,
+            type: Schema.Types.ObjectId,
+            ref: `Robots`,
         },
     ],
 });
@@ -40,3 +40,5 @@ userSchema.set('toJSON', {
         delete returnedObject.password;
     },
 });
+
+export const User = model<UserI>('User', userSchema, 'users');
