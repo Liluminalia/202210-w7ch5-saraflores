@@ -109,7 +109,7 @@ describe('given an "app" with "/robots" route', () => {
             const response = await request(app)
                 .post('/robots/create')
                 .set('Authorization', `Bearer ${token}`)
-                .send({ name: 'tobias' });
+                .send({ name: 'armando' });
 
             expect(response.status).toBe(201);
         });
