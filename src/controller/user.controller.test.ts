@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { RobotRepository } from '../data/robot.repository.js';
 import { UserRepository } from '../data/user.repository.js';
 import { CustomError, HTTPError } from '../interfaces/error.js';
 import { passwordComparer } from '../services/auth.js';
@@ -12,7 +13,8 @@ describe('Given UserController', () => {
         UserRepository.prototype.post = jest.fn().mockResolvedValue('');
 
         const repository = new UserRepository();
-        const userController = new UserController(repository);
+        const robotRepo = new RobotRepository();
+        const userController = new UserController(repository, robotRepo);
         const req: Partial<Request> = {};
         const res: Partial<Response> = {
             json: jest.fn(),
@@ -58,7 +60,8 @@ describe('Given UserController', () => {
         UserRepository.prototype.get = jest.fn().mockRejectedValue('User');
         UserRepository.prototype.post = jest.fn().mockRejectedValue(['User']);
         const repository = new UserRepository();
-        const userController = new UserController(repository);
+        const robotRepo = new RobotRepository();
+        const userController = new UserController(repository, robotRepo);
         const req: Partial<Request> = {};
         const res: Partial<Response> = {
             json: jest.fn(),

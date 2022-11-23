@@ -20,7 +20,9 @@ export const createToken = (payload: TokenPayload) => {
 
 export const readToken = (token: string) => {
     const payload = jwt.verify(token, getSecret());
-    if (typeof payload === 'string') throw new Error('token not valid');
+    if (typeof payload === 'string') {
+        throw new Error('token not valid');
+    }
     return payload;
 };
 export const passwordEncrypt = (password: string) => {

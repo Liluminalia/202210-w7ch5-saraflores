@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { RobotRepository } from '../data/robot.repository.js';
+import { UserRepository } from '../data/user.repository.js';
 import { ProtoRobot } from '../entities/robot.js';
 import { CustomError, HTTPError } from '../interfaces/error.js';
 import { RobotController } from './robot.controller.js';
@@ -13,14 +14,14 @@ describe('Given RobotController', () => {
                 img: 'url img',
                 velocity: 7,
                 force: 8,
-                creation: 'date string',
+                date: '2022-4-23',
             },
             {
                 name: 'robot2',
                 img: 'new url imag',
                 velocity: 4,
                 force: 5,
-                creation: 'new date string',
+                date: '2022-5-23',
             },
         ];
         RobotRepository.prototype.getAll = jest
@@ -42,7 +43,8 @@ describe('Given RobotController', () => {
             .fn()
             .mockResolvedValue(mockData);
         const repository = new RobotRepository();
-        const robotController = new RobotController(repository);
+        const userRepository = new UserRepository();
+        const robotController = new RobotController(repository, userRepository);
         const req: Partial<Request> = {};
         const res: Partial<Response> = {
             json: jest.fn(),
@@ -61,7 +63,7 @@ describe('Given RobotController', () => {
 
         test('Then post should have been called', async () => {
             await robotController.post(req as Request, res as Response, next);
-            expect(res.json).toHaveBeenCalledWith({ robots: 'newRobot' });
+            expect(res.json).toHaveBeenCalledWith({ robots: mockData });
         });
 
         test('Then patch should have been called', async () => {
@@ -89,7 +91,9 @@ describe('Given RobotController', () => {
             .mockRejectedValue(['Robot']);
         RobotRepository.prototype.delete = jest.fn().mockRejectedValue(3);
         const repository = new RobotRepository();
-        const robotController = new RobotController(repository);
+        const userRepository = new UserRepository();
+
+        const robotController = new RobotController(repository, userRepository);
         const req: Partial<Request> = {};
         const res: Partial<Response> = {
             json: jest.fn(),

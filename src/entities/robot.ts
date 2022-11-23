@@ -16,7 +16,7 @@ export type Robot = {
     img: string;
     velocity: number;
     force: number;
-    date: Date;
+    date: string | Date;
     owner: typeof mongoose.Types.ObjectId;
 };
 export const robotSchema = new Schema<Robot>({

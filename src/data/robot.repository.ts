@@ -10,7 +10,9 @@ export class RobotRepository implements Repo<Robot> {
     }
     async get(id: id): Promise<Robot> {
         const result = (await this.#Model.findById(id)) as Robot;
-        if (!result) throw new Error('Not found id');
+        if (!result) {
+            throw new Error('Not found id');
+        }
         return result as Robot;
     }
     async post(data: ProtoRobot): Promise<Robot> {
@@ -22,19 +24,25 @@ export class RobotRepository implements Repo<Robot> {
         const result = await this.#Model.findByIdAndUpdate(id, data, {
             new: true,
         });
-        if (!result) throw new Error('Not found id');
+        if (!result) {
+            throw new Error('Not found id');
+        }
         return result as Robot;
     }
     async delete(id: id): Promise<{ id: id }> {
         const result = (await this.#Model.findByIdAndDelete(id)) as Robot;
-        if (result === null) throw new Error('Not found id');
+        if (result === null) {
+            throw new Error('Not found id');
+        }
         return { id: id };
     }
     async find(search: {
         [key: string]: string | number | Date;
     }): Promise<Robot> {
         const result = await this.#Model.findOne(search);
-        if (!result) throw new Error('not found id');
+        if (!result) {
+            throw new Error('not found id');
+        }
         return result as unknown as Robot;
     }
     disconnect() {

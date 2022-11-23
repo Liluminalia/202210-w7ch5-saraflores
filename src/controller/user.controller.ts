@@ -34,7 +34,9 @@ export class UserController {
                 req.body.password,
                 user.password
             );
-            if (!isPasswordValid) throw new Error();
+            if (!isPasswordValid) {
+                throw new Error();
+            }
             const token = createToken({
                 id: user.id,
                 name: user.name,
