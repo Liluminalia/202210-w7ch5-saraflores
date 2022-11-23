@@ -1,5 +1,5 @@
 import debugCreator from 'debug';
-import mongoose, { model, Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { ProtoRobotI, RobotI, Robot } from '../entities/robot.js';
 import { id, Repo } from './repo.js';
 

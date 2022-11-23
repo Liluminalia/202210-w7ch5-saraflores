@@ -1,14 +1,8 @@
-// get('/');
-// get('/:id');
-// post('/create');
-// patch('/update/:id');
-// delete('/delete/:id');
 import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../app';
 import { dataBaseConnect } from '../data.base.connect';
-import { Robot } from '../entities/robot';
-import { ProtoUserI, User, UserI } from '../entities/user';
+import { User } from '../entities/user';
 import { createToken, TokenPayload } from '../services/auth';
 
 const setCollection = async () => {
@@ -25,7 +19,7 @@ const setCollection = async () => {
     const testIds = [data[0].id, data[1].id];
     return testIds;
 };
-// comentado xq me rompe todo
+// comentado xq me rompe los tests
 // const setCollectionRobot = async () => {
 //     const robotsMock = [
 //         {
@@ -53,7 +47,7 @@ const setCollection = async () => {
 //             owner: 'aldana',
 //         },
 //     ];
-
+//
 //     await Robot.deleteMany();
 //     await Robot.insertMany(robotsMock);
 //     const data2 = await Robot.find();
