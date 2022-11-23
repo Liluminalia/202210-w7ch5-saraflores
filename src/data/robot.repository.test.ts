@@ -18,14 +18,15 @@ const mockData = [
 ];
 describe('Given RobotRepository', () => {
     describe('When we instantiate it', () => {
-        const repository = new RobotRepository();
+        const repository = RobotRepository.getInstance();
         let testIds: Array<string>;
-        beforeEach(async () => {
+        beforeAll(async () => {
             await dataBaseConnect();
             await repository.getModel().deleteMany();
             await repository.getModel().insertMany(mockData);
             const data = await repository.getModel().find();
             testIds = [data[0].id, data[1].id];
+            console.log(testIds);
         });
         test('Then getAll should have been called', async () => {
             const result = await repository.getAll();
@@ -68,7 +69,7 @@ describe('Given RobotRepository', () => {
         });
         test('Then if id is bad formate patch should throw an error', async () => {
             expect(async () => {
-                await repository.patch(testIds[3], mockData[0]);
+                await repository.patch(testIds[3], {});
             }).rejects.toThrowError();
         });
         test.skip('Then delete should have been called', async () => {
