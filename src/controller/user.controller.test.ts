@@ -61,7 +61,7 @@ describe('Given UserController', () => {
             await mongoose.disconnect();
         });
 
-        test.skip('Then register should have been called', async () => {
+        test('Then register should have been called', async () => {
             req.params = {
                 name: 'pepe',
                 password: 'pepe123',
@@ -80,7 +80,7 @@ describe('Given UserController', () => {
             });
         });
 
-        test.skip('Then login should have been called', async () => {
+        test('Then login should have been called', async () => {
             req.body.name = { name: 'pepe' };
             await userController.login(req as Request, res as Response, next);
             const user = await repository.find(req.body.name);

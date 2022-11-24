@@ -5,7 +5,7 @@ export type ProtoUserI = {
     email?: string;
     password?: string;
     role?: string;
-    robots?: Array<Types.ObjectId>;
+    robots?: Types.ObjectId;
 };
 
 export type UserI = {
@@ -14,7 +14,7 @@ export type UserI = {
     email: string;
     password: string;
     role: string;
-    robots: Array<Types.ObjectId>;
+    robots: Types.ObjectId;
 };
 export const userSchema = new Schema<UserI>({
     name: {
