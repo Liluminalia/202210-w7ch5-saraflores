@@ -1,97 +1,61 @@
 import { NextFunction, Request, Response } from 'express';
-import mongoose from 'mongoose';
-import { dataBaseConnect } from '../data.base.connect.js';
+import mongoose, { Types } from 'mongoose';
 import { RobotRepository } from '../data/robot.repository.js';
 import { UserRepository } from '../data/user.repository.js';
-import { User } from '../entities/user.js';
 import { CustomError, HTTPError } from '../interfaces/error.js';
-import {
-    createToken,
-    passwordComparer,
-    TokenPayload,
-} from '../services/auth.js';
+import { passwordComparer, createToken } from '../services/auth.js';
 import { UserController } from './user.controller.js';
-jest.mock('../data/user.repository');
-
+jest.mock('../services/auth');
 describe('Given UserController', () => {
     describe('When we instantiate it', () => {
-        UserRepository.prototype.get = jest.fn().mockResolvedValue('');
-
-        UserRepository.prototype.post = jest.fn().mockResolvedValue('');
-
         const repository = UserRepository.getInstance();
         const robotRepo = RobotRepository.getInstance();
+        const userId = new Types.ObjectId();
         const userController = new UserController(repository, robotRepo);
-        const req: Partial<Request> = {};
-        const res: Partial<Response> = {
-            json: jest.fn(),
-        };
-        const next: NextFunction = jest.fn();
-        const setCollection = async () => {
-            const usersMock = [
-                { name: 'tomas', email: 'tomatin@gmail.com', role: 'user' },
-                { name: 'pedro', email: 'gone@gmail.com', role: 'admin' },
-                { name: 'vera', email: 'pipipi@gmail.com', role: 'admin' },
-                {
-                    name: 'Pepino',
-                    email: 'siempreesverano@gmail.com',
-                    role: 'user',
-                },
-            ];
-
-            await User.deleteMany();
-            await User.insertMany(usersMock);
-            const data = await User.find();
-            const testIds = [data[0].id, data[1].id];
-            return testIds;
-        };
-        let token: string;
-        let ids: Array<string>;
-        beforeEach(async () => {
-            await dataBaseConnect();
-            ids = await setCollection();
-            const payload: TokenPayload = {
-                id: ids[0],
-                name: 'pepebot',
-                role: 'admin',
-            };
-            token = createToken(payload);
+        repository.post = jest.fn().mockResolvedValue({
+            id: userId,
+            name: 'pepe',
+            role: 'admin',
         });
-        afterEach(async () => {
-            await mongoose.disconnect();
+        repository.find = jest.fn().mockResolvedValue({
+            id: userId,
+            name: 'pepe',
+            role: 'admin',
+        });
+        let req: Partial<Request>;
+        let res: Partial<Response>;
+        let next: NextFunction;
+        beforeEach(() => {
+            req = {};
+            res = {};
+            res.status = jest.fn().mockReturnValue(res);
+            next = jest.fn();
+            res.json = jest.fn();
         });
 
         test('Then register should have been called', async () => {
-            req.params = {
-                name: 'pepe',
-                password: 'pepe123',
-                email: 'pepe@gmail.com',
-                role: 'capitan pescanova',
-            };
             await userController.register(
                 req as Request,
                 res as Response,
                 next
             );
             expect(res.json).toHaveBeenCalledWith({
-                id: ids[0],
-                name: 'pepe',
-                role: 'admin',
+                user: {
+                    id: userId,
+                    name: 'pepe',
+                    role: 'admin',
+                },
             });
         });
 
         test('Then login should have been called', async () => {
-            req.body.name = { name: 'pepe' };
-            await userController.login(req as Request, res as Response, next);
-            const user = await repository.find(req.body.name);
+            (passwordComparer as jest.Mock).mockResolvedValue(true);
+            (createToken as jest.Mock).mockReturnValue('token');
+            req.body = { password: 'patata' };
 
-            req.body.password = 'patata';
-            user.password = 'patata';
-            const result = await passwordComparer(
-                req.body.password,
-                user.password
-            );
-            expect(result).toBe(true);
+            await userController.login(req as Request, res as Response, next);
+
+            expect(res.json).toHaveBeenCalledWith({ token: 'token' });
         });
     });
     describe('when we dont instantiate it', () => {
@@ -101,11 +65,10 @@ describe('Given UserController', () => {
             'message of error'
         );
 
-        UserRepository.prototype.get = jest.fn().mockRejectedValue('User');
-        UserRepository.prototype.post = jest.fn().mockRejectedValue(['User']);
         const repository = UserRepository.getInstance();
         const robotRepo = RobotRepository.getInstance();
         const userController = new UserController(repository, robotRepo);
+
         const req: Partial<Request> = {};
         const res: Partial<Response> = {
             json: jest.fn(),
@@ -120,13 +83,30 @@ describe('Given UserController', () => {
             );
             expect(error).toBeInstanceOf(HTTPError);
         });
-        //     test('Then if something went wrong patch should throw an error', async () => {
-        //         await userController.patch(req as Request, res as Response, next);
-        //         expect(error).toBeInstanceOf(HTTPError);
-        //     });
-        //     test('Then if something went wrong delete should throw an error', async () => {
-        //         await userController.delete(req as Request, res as Response, next);
-        //         expect(error).toBeInstanceOf(HTTPError);
-        //     });
+        test('Then if something went wrong login should throw an error', async () => {
+            await userController.login(req as Request, res as Response, next);
+            expect(error).toBeInstanceOf(HTTPError);
+        });
+        test('Then if password is not valid login should throw an error', async () => {
+            (passwordComparer as jest.Mock).mockResolvedValue(false);
+            (createToken as jest.Mock).mockReturnValue('token');
+            req.body = { password: 'patata' };
+
+            await userController.login(req as Request, res as Response, next);
+
+            expect(error).toBeInstanceOf(HTTPError);
+        });
+        // test no funciona como yo quiero, stopper
+        test('Then if there is not password login should throw an error', async () => {
+            repository.find = jest.fn().mockResolvedValue({
+                id: '637d1d346346f6ff04b55896',
+                name: 'pepe',
+                role: 'admin',
+            });
+
+            await userController.login(req as Request, res as Response, next);
+
+            expect(error).toBeInstanceOf(HTTPError);
+        });
     });
 });
