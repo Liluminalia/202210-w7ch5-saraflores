@@ -59,7 +59,7 @@ export class RobotController {
     async patch(req: Request, resp: Response, next: NextFunction) {
         try {
             const robots = await this.repository.patch(req.params.id, req.body);
-            resp.json({ robots });
+            resp.status(202).json({ robots });
         } catch (error) {
             next(this.#createHttpError(error as Error));
         }
@@ -67,7 +67,7 @@ export class RobotController {
     async delete(req: Request, resp: Response, next: NextFunction) {
         try {
             await this.repository.delete(req.params.id);
-            resp.json({});
+            resp.status(200).json({});
         } catch (error) {
             next(this.#createHttpError(error as Error));
         }

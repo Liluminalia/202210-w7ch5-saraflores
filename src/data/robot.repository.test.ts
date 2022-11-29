@@ -32,7 +32,7 @@ describe('Given RobotRepository', () => {
             const result = await repository.getAll();
             expect(result[0].name).toEqual(mockData[0].name);
         });
-        test.skip('Then get should have been called', async () => {
+        test('Then get should have been called', async () => {
             const result = await repository.get(testIds[0]);
             expect(result.name).toEqual('froilan');
         });
@@ -60,7 +60,7 @@ describe('Given RobotRepository', () => {
             };
             expect(result.id).toEqual(newRobot2.id);
         });
-        test.skip('Then patch should have been called', async () => {
+        test('Then patch should have been called', async () => {
             const updatedRobot = {
                 velocity: 9,
             };
@@ -72,7 +72,7 @@ describe('Given RobotRepository', () => {
                 await repository.patch(testIds[3], {});
             }).rejects.toThrowError();
         });
-        test.skip('Then delete should have been called', async () => {
+        test('Then delete should have been called', async () => {
             const result = await repository.delete(testIds[0]);
             expect(result).toEqual({ id: testIds[0] });
         });
